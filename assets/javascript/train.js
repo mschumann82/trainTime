@@ -19,8 +19,8 @@ var trainName = "";
 var destination = "";
 var frequency = 0;
 var nextArrival = "";
-var minutesAway = 0;
-var firstTrain = "";
+
+
 
 $("#add-train").on("click", function(event) {
     // Don't refresh the page!
@@ -33,10 +33,12 @@ $("#add-train").on("click", function(event) {
     firstTrain = $("#first-input").val().trim();
 
     database.ref().push({
+        
       trainName: trainName,
       destination: destination,
       frequency: frequency,
       firstTrain: firstTrain, // first part is child of database. after : is the value.
+        
     });
 
     console.log(trainName);
@@ -46,5 +48,34 @@ $("#add-train").on("click", function(event) {
 
   });
 
-});
+  
+    
+  database.ref().on("child_added", function(snapshot) { 
+      var newRow = $("<tr>");
+
+      // Add database data to table data elements
+      var newTrain = $("<td>").text(snapshot.val().trainName);
+      var newDestination = $("<td>").text(snapshot.val().destination);
+      var newFrequency = $("<td>").text(snapshot.val().frequency);
+      var newNextArrival = $("<td>").text(nextArrival);         
+      var newMinutesAway = $("<td>").text(snapshot.val().minutesAway);
+      
+
+      // Add table data elements with database info to the table row
+      newRow.prepend(newTrain, newDestination, newFrequency, newNextArrival, newMinutesAway);
+
+      // Add the filled table row to the table
+      $("#train-data").prepend(newRow);
+    
+   
+
+  });
+
+
+
+
+
+
+
+}); // end of document.ready
 
